@@ -20,7 +20,7 @@ run_experimment() {
   # create data_file if not exists
   if [[ ! -f $data_file ]]; then
     # schema of csv
-    echo 'peakRSS, runtime, full command, datetime of run' >$data_file
+    echo 'peakRSS,runtime,full_command,datetime_of_run' >$data_file
   fi
 
   # save current datetime
