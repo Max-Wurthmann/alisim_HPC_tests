@@ -20,7 +20,7 @@ run_experimment() {
   # create data_file if not exists
   if [[ ! -f $data_file ]]; then
     # schema of csv
-    echo 'peakRSS,runtime,full_command,datetime_of_run' >$data_file
+    echo 'peakRSS,runtime,n_proc,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run' >$data_file
   fi
 
   # save current datetime
@@ -33,7 +33,7 @@ run_experimment() {
       mpirun -np "$n_proc" --allow-run-as-root
       iqtree2-mpi --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
-      -r "$n_taxa" -rlen "$branch_length_mean"
+      -r "$n_taxa"
       -nt "$n_threads"
       --openmp-alg "$omp_alg"
       -redo
@@ -43,7 +43,7 @@ run_experimment() {
     cmd=(
       iqtree2 --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
-      -r "$n_taxa" -rlen "$branch_length_mean"
+      -r "$n_taxa"
       -nt "$n_threads"
       --openmp-alg "$omp_alg"
       -redo
@@ -76,8 +76,8 @@ run_experimment() {
   runtime=${runtime#"$pattern"}
 
   # record data
-  # csv format: peakRSS, runtime, full command, current date/time
-  echo "$peakRSS, $runtime, ${cmd[*]}, $cur_datetime" >>$data_file
+  # csv format:  peakRSS,runtime,n_proc,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run
+  echo "$peakRSS,$runtime,$n_proc,$n_threads,$n_sites,$n_taxa,$n_alignments,$omp_alg,${cmd[*]},$cur_datetime" >>$data_file
 }
 
 # define file names
@@ -91,11 +91,10 @@ n_sites=1000000
 n_taxa=500
 n_alignments=10
 model='GTR+I{0.2}+G4{0.5}'
-branch_length_mean=0.1
 
 n_proc=5
 n_threads=2
 omp_alg='IM' # other option 'EM'
 
-# put in loop to run multiple experiments with different config
+# put in loop to run multiple experiments with different parameters
 run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
