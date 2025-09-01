@@ -31,8 +31,9 @@ run_experimment() {
     # MPI version
     cmd=(
       mpirun -np "$n_proc" --allow-run-as-root
-      iqtree2-mpi --alisim "$output_dir/alg" -t "RANDOM{yh/$n_taxa}" -m "$model"
+      iqtree2-mpi --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
+      -r "$n_taxa" -rlen "$branch_length_mean"
       -nt "$n_threads"
       --openmp-alg "$omp_alg"
       -redo
@@ -40,8 +41,9 @@ run_experimment() {
   else
     # single process version
     cmd=(
-      iqtree2 --alisim "$output_dir/alg" -t "RANDOM{yh/$n_taxa}" -m "$model"
+      iqtree2 --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
+      -r "$n_taxa" -rlen "$branch_length_mean"
       -nt "$n_threads"
       --openmp-alg "$omp_alg"
       -redo
@@ -88,7 +90,8 @@ output_dir=output
 n_sites=1000000
 n_taxa=500
 n_alignments=10
-model='JC'
+model='GTR+I{0.2}+G4{0.5}'
+branch_length_mean=0.1
 
 n_proc=5
 n_threads=2
