@@ -79,8 +79,8 @@ run_experimment() {
 }
 
 # define file names
-mem_logfile=memlog.tmp # cleared before each run
-out_logfile=outlog.tmp # cleared before each run
+mem_logfile=memlog.tmp
+out_logfile=outlog.tmp
 err_logfile=err.log
 data_file=data.csv
 output_dir=output
@@ -88,10 +88,14 @@ output_dir=output
 n_sites=1000000
 n_taxa=500
 n_alignments=10
-model='JC'
+# model='JC'
 
 n_proc=5
 n_threads=2
 omp_alg='IM' # other option 'EM'
 
-run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
+for model in 'JC' 'GTR'; do
+  for _ in $(seq 1 10); do
+    run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
+  done
+done
