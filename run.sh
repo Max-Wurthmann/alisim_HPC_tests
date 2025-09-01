@@ -94,4 +94,5 @@ n_proc=5
 n_threads=2
 omp_alg='IM' # other option 'EM'
 
+# put in loop to run multiple experiments with different config
 run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
