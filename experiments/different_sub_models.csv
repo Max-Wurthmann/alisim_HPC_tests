@@ -1,4 +1,4 @@
-peakRSS, runtime, full command, datetime of run
+peakRSS,runtime,full_command,datetime_of_run
 373880, 27.280s, mpirun -np 5 --allow-run-as-root iqtree2-mpi --alisim output/alg -t RANDOM{yh/500} -m JC --length 1000000 --num-alignments 10 -nt 2 --openmp-alg IM -redo, Mon Sep  1 13:13:55 UTC 2025
 354684, 28.014s, mpirun -np 5 --allow-run-as-root iqtree2-mpi --alisim output/alg -t RANDOM{yh/500} -m JC --length 1000000 --num-alignments 10 -nt 2 --openmp-alg IM -redo, Mon Sep  1 13:14:22 UTC 2025
 384064, 29.305s, mpirun -np 5 --allow-run-as-root iqtree2-mpi --alisim output/alg -t RANDOM{yh/500} -m JC --length 1000000 --num-alignments 10 -nt 2 --openmp-alg IM -redo, Mon Sep  1 13:14:50 UTC 2025
