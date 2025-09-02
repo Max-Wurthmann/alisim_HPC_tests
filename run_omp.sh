@@ -6,12 +6,12 @@ run_experimment() {
   n_alignments=$3
   model=$4
 
-  n_proc=$5
+  n_procs=$5
   n_threads=$6
   omp_alg=$7
 
   echo "Running experiment with $n_sites sites, $n_taxa taxa, $n_alignments alignments, model $model"
-  echo "Using $n_proc processes, $n_threads threads per process, OpenMP algorithm $omp_alg"
+  echo "Using $n_procs processes, $n_threads threads per process, OpenMP algorithm $omp_alg"
 
   # clear tmp logfile if it exists
   rm -f $mem_logfile
@@ -20,17 +20,17 @@ run_experimment() {
   # create data_file if not exists
   if [[ ! -f $data_file ]]; then
     # schema of csv
-    echo 'peakRSS_[KiB],runtime_[s],n_proc,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run' >$data_file
+    echo 'peakRSS_[KiB],runtime_[s],n_procs,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run' >$data_file
   fi
 
   # save current datetime
   cur_datetime=$(date)
 
   # define command to run
-  if [[ $n_proc -gt 1 ]]; then
+  if [[ $n_procs -gt 1 ]]; then
     # MPI version
     cmd=(
-      mpirun -np "$n_proc" --allow-run-as-root
+      mpirun -np "$n_procs" --allow-run-as-root
       iqtree2-mpi --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
       -r "$n_taxa"
@@ -78,8 +78,8 @@ run_experimment() {
   runtime=${runtime%s}
 
   # record data
-  # csv format:  peakRSS,runtime,n_proc,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run
-  echo "$peakRSS,$runtime,$n_proc,$n_threads,$n_sites,$n_taxa,$n_alignments,$omp_alg,${cmd[*]},$cur_datetime" >>$data_file
+  # csv format:  peakRSS,runtime,n_procs,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run
+  echo "$peakRSS,$runtime,$n_procs,$n_threads,$n_sites,$n_taxa,$n_alignments,$omp_alg,${cmd[*]},$cur_datetime" >>$data_file
 }
 
 # define file names
@@ -89,14 +89,20 @@ err_logfile=err.log
 data_file=data.csv
 output_dir=output
 
-n_sites=200000
-n_taxa=6000
+# n_sites=200000
+# n_taxa=6000
 n_alignments=48
 model='GTR+I{0.2}+G4{0.5}'
 
-n_proc=1
-n_threads=1
-omp_alg='IM' # other option 'EM'
+n_procs=1
+# n_threads=1
+# omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
 
-# put in loop to run multiple experiments with different parameters
-run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
+for omp_alg in 'IM' 'EM'; do
+  for tuple in '200000 6000' '6000 20000'; do
+    read -r n_sites n_taxa <<<"$tuple"
+    for n_threads in 1 2 4 8 12 16; do
+      run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+    done
+  done
+done
