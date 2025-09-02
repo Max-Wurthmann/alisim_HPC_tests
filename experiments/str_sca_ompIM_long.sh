@@ -86,17 +86,18 @@ run_experimment() {
 mem_logfile=memlog.tmp # cleared before each run
 out_logfile=outlog.tmp # cleared before each run
 err_logfile=err.log
-data_file=data.csv
+data_file=str_sca_ompIM.csv
 output_dir=output
 
-n_sites=200000
-n_taxa=6000
+n_sites=500000
+n_taxa=15000
 n_alignments=48
 model='GTR+I{0.2}+G4{0.5}'
 
 n_proc=1
-n_threads=1
+# n_threads=1
 omp_alg='IM' # other option 'EM'
 
-# put in loop to run multiple experiments with different parameters
-run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
+for n_threads in 1 2 4 8 12 16; do
+  run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_proc" "$n_threads" "$omp_alg"
+done
