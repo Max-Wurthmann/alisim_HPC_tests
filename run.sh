@@ -84,18 +84,20 @@ output_dir=output      # cleared before each run
 err_logfile=err.log
 data_file=data.csv
 
-monitor_interval=0.3 # time between checking memory usage in seconds
+monitor_interval=0.2 # time between checking memory usage in seconds
 
 mpi_opts=(--allow-run-as-root) # can also add bind options
 
 n_alignments=48
 model='GTR+I{0.2}+G4{0.5}'
+long='200000 6000' # (n_sites, n_taxa) pair
+deep='6000 200000' # (n_sites, n_taxa) pair
 
 # MPI scaling with fixed OMP parameters
 n_threads=1
 omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
 
-for size_tuple in '200000 6000' '6000 20000'; do
+for size_tuple in "$deep" "$long"; do
   read -r n_sites n_taxa <<<"$size_tuple"
   for n_procs in 1 2 4 8 12 16; do
     run_experimment
@@ -106,7 +108,7 @@ done
 n_procs=1
 
 for omp_alg in 'IM' 'EM'; do
-  for size_tuple in '200000 6000' '6000 20000'; do
+  for size_tuple in "$deep" "$long"; do
     read -r n_sites n_taxa <<<"$size_tuple"
     for n_threads in 1 2 4 8 12 16; do
       run_experimment
@@ -122,7 +124,7 @@ done
 mpi_opts=(--allow-run-as-root --bind-to none)
 
 for omp_alg in 'IM' 'EM'; do
-  for size_tuple in '200000 6000' '6000 20000'; do
+  for size_tuple in "$deep" "$long"; do
     read -r n_sites n_taxa <<<"$size_tuple"
     for proc_tuple in '1 16' '2 8' '4 4' '8 2' '16 1'; do
       read -r n_procs n_threads <<<"$proc_tuple"

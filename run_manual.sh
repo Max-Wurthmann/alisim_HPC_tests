@@ -108,19 +108,18 @@ logs_dir=logs          # cleared before each run
 output_dir=output      # cleared before each run
 data_file=data.csv
 
-monitor_interval=0.3 # time between checking memory usage in seconds
+monitor_interval=0.2 # time between checking memory usage in seconds
 
-# n_sites=200000
-# n_taxa=6000
 n_alignments=48
 model='GTR+I{0.2}+G4{0.5}'
+long='200000 6000' # (n_sites, n_taxa) pair
+deep='6000 200000' # (n_sites, n_taxa) pair
 
-# n_procs=1
 n_threads=1
 omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
 
-for tuple in '200000 6000' '6000 20000'; do
-  read -r n_sites n_taxa <<<"$tuple"
+for size_tuple in "$deep" "$long"; do
+  read -r n_sites n_taxa <<<"$size_tuple"
   for n_procs in 1 2 4 8 12 16; do
     run_experimment
   done
