@@ -1,15 +1,6 @@
 #!/bin/bash
 
 run_experimment() {
-  n_sites=$1
-  n_taxa=$2
-  n_alignments=$3
-  model=$4
-
-  n_procs=$5
-  n_threads=$6
-  omp_alg=$7
-
   echo "Running experiment with $n_sites sites, $n_taxa taxa, $n_alignments alignments, model $model"
   echo "Using $n_procs processes, $n_threads threads per process, OpenMP algorithm $omp_alg"
 
@@ -107,7 +98,7 @@ omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
 for size_tuple in '200000 6000' '6000 20000'; do
   read -r n_sites n_taxa <<<"$size_tuple"
   for n_procs in 1 2 4 8 12 16; do
-    run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+    run_experimment
   done
 done
 
@@ -118,7 +109,7 @@ for omp_alg in 'IM' 'EM'; do
   for size_tuple in '200000 6000' '6000 20000'; do
     read -r n_sites n_taxa <<<"$size_tuple"
     for n_threads in 1 2 4 8 12 16; do
-      run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+      run_experimment
     done
   done
 done
@@ -135,7 +126,7 @@ for omp_alg in 'IM' 'EM'; do
     read -r n_sites n_taxa <<<"$size_tuple"
     for proc_tuple in '1 16' '2 8' '4 4' '8 2' '16 1'; do
       read -r n_procs n_threads <<<"$proc_tuple"
-      run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+      run_experimment
     done
   done
 done
