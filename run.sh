@@ -13,10 +13,14 @@ run_experimment() {
   echo "Running experiment with $n_sites sites, $n_taxa taxa, $n_alignments alignments, model $model"
   echo "Using $n_procs processes, $n_threads threads per process, OpenMP algorithm $omp_alg"
 
-  # clear tmp logfile if it exists
+  # clear tmp logfiles and output_dir if they exist
   rm -f $mem_logfile
+  rm -f $out_logfile
+  rm -rf $output_dir
+
   # create output directory if it doesn't exist
   mkdir -p $output_dir
+
   # create data_file if not exists
   if [[ ! -f $data_file ]]; then
     # schema of csv
@@ -30,7 +34,7 @@ run_experimment() {
   if [[ $n_procs -gt 1 ]]; then
     # MPI version
     cmd=(
-      mpirun -np "$n_procs" --allow-run-as-root
+      mpirun -np "$n_procs" "${mpi_opts[@]}"
       iqtree2-mpi --alisim "$output_dir/alg" -m "$model"
       --length "$n_sites" --num-alignments "$n_alignments"
       -r "$n_taxa"
@@ -54,7 +58,7 @@ run_experimment() {
   while true; do
     # Sum RSS of all processes matching iqtree2
     ps -eo pid,rss,comm | awk 'BEGIN {sum = 0} /iqtree2/ {sum += $2} END {print sum}' >>$mem_logfile
-    sleep 1
+    sleep $monitor_interval
   done &
 
   # save pid of memory monitor
@@ -85,18 +89,46 @@ run_experimment() {
 # define file names
 mem_logfile=memlog.tmp # cleared before each run
 out_logfile=outlog.tmp # cleared before each run
+output_dir=output      # cleared before each run
 err_logfile=err.log
 data_file=data.csv
-output_dir=output
 
-# n_sites=200000
-# n_taxa=6000
+monitor_interval=0.3 # time between checking memory usage in seconds
+
+mpi_opts=(--allow-run-as-root) # can also add bind options
+
 n_alignments=48
 model='GTR+I{0.2}+G4{0.5}'
 
-# n_procs=1
-# n_threads=1
-# omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
+# MPI scaling with fixed OMP parameters
+n_threads=1
+omp_alg='IM' # other option 'EM', irrelevant for n_threads=1
+
+for size_tuple in '200000 6000' '6000 20000'; do
+  read -r n_sites n_taxa <<<"$size_tuple"
+  for n_procs in 1 2 4 8 12 16; do
+    run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+  done
+done
+
+# OMP scaling with fixed n_procs=1
+n_procs=1
+
+for omp_alg in 'IM' 'EM'; do
+  for size_tuple in '200000 6000' '6000 20000'; do
+    read -r n_sites n_taxa <<<"$size_tuple"
+    for n_threads in 1 2 4 8 12 16; do
+      run_experimment "$n_sites" "$n_taxa" "$n_alignments" "$model" "$n_procs" "$n_threads" "$omp_alg"
+    done
+  done
+done
+
+# Hybrid MPI+OMP scaling
+# Note: depending on hardware architecture: run this with e.g. --bind-to none mpi option
+# otherwise MPI can restrict visibility of other CPUs which triggers an error when running with multiple threads
+# common for proc_tuple = '2 8'
+
+mpi_opts=(--allow-run-as-root --bind-to none)
 
 for omp_alg in 'IM' 'EM'; do
   for size_tuple in '200000 6000' '6000 20000'; do

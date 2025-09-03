@@ -13,8 +13,10 @@ run_experimment() {
   echo "Running experiment with $n_sites sites, $n_taxa taxa, $n_alignments alignments, model $model"
   echo "Using $n_procs processes, $n_threads threads per process, OpenMP algorithm $omp_alg"
 
-  # clear tmp logfile if it exists
+  # clear logs and previous output
   rm -f $mem_logfile
+  rm -rf $logs_dir
+  rm -rf $output_dir
 
   # create data_file if not exists
   if [[ ! -f $data_file ]]; then
@@ -42,7 +44,7 @@ run_experimment() {
   while true; do
     # Sum RSS of all processes matching iqtree2
     ps -eo pid,rss,comm | awk 'BEGIN {sum = 0} /iqtree2/ {sum += $2} END {print sum}' >>$mem_logfile
-    sleep 1
+    sleep $monitor_interval
   done &
 
   # save pid of memory monitor
@@ -111,9 +113,11 @@ run_experimment() {
 
 # define file names
 mem_logfile=memlog.tmp # cleared before each run
+logs_dir=logs          # cleared before each run
+output_dir=output      # cleared before each run
 data_file=data.csv
-logs_dir=logs
-output_dir=output
+
+monitor_interval=0.3 # time between checking memory usage in seconds
 
 # n_sites=200000
 # n_taxa=6000
