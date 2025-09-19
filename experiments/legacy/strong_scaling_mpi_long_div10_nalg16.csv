@@ -1,7 +1,0 @@
-peakRSS,runtime,full_command,datetime_of_run
-23652, 86.904s, iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:50:30 UTC 2025
-58092, 63.864s, mpirun -np 2 --allow-run-as-root iqtree2-mpi --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:51:57 UTC 2025
-119748, 33.726s, mpirun -np 4 --allow-run-as-root iqtree2-mpi --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:53:01 UTC 2025
-240664, 21.545s, mpirun -np 8 --allow-run-as-root iqtree2-mpi --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:53:35 UTC 2025
-352848, 25.629s, mpirun -np 12 --allow-run-as-root iqtree2-mpi --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:53:57 UTC 2025
-478808, 14.912s, mpirun -np 16 --allow-run-as-root iqtree2-mpi --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 100000 --num-alignments 16 -r 3000 -nt 1 --openmp-alg IM -redo, Mon Sep  1 21:54:22 UTC 2025

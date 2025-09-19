@@ -1,7 +1,0 @@
-peakRSS_[KiB],runtime_[s],n_proc,n_threads,n_sites,n_taxa,n_alignments,omp_alg,full_command,datetime_of_run
-73716,6830.688,1,1,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 1 --openmp-alg IM -redo,Tue Sep  2 11:50:30 UTC 2025
-78408,6448.440,1,2,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 2 --openmp-alg IM -redo,Tue Sep  2 13:44:20 UTC 2025
-81344,2193.454,1,4,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 4 --openmp-alg IM -redo,Tue Sep  2 15:31:51 UTC 2025
-91360,1176.296,1,8,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 8 --openmp-alg IM -redo,Tue Sep  2 16:08:25 UTC 2025
-97412,1018.229,1,12,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 12 --openmp-alg IM -redo,Tue Sep  2 16:28:02 UTC 2025
-99228,1035.214,1,16,500000,15000,48,IM,iqtree2 --alisim output/alg -m GTR+I{0.2}+G4{0.5} --length 500000 --num-alignments 48 -r 15000 -nt 16 --openmp-alg IM -redo,Tue Sep  2 16:45:00 UTC 2025
